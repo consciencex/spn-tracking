@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My LIFF App</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <h1>My LIFF App</h1>
+  <button id="getProfile">Get Profile</button>
+  <button id="sendData">Send Data to Xano</button>
+  <script>
+    // Initialize LIFF app
+    document.addEventListener("DOMContentLoaded", function() {
+      liff.init({
+        liffId: "YOUR_LIFF_ID"
+      }).then(() => {
+        console.log('LIFF initialized');
+      }).catch(err => {
+        console.error('LIFF Initialization failed', err);
+      });
+    });
+
+    // Get Profile
+    document.getElementById('getProfile').addEventListener('click', function() {
+      liff.getProfile().then(profile => {
+        alert('Hello, ' + profile.displayName);
+      }).catch(err => {
+        console.error('Error getting profile', err);
+      });
+    });
+
+    // Send Data to Xano
+    document.getElementById('sendData').addEventListener('click', function() {
+      liff.getProfile().then(profile => {
+        // Send data to Xano
+        fetch('https://YOUR_XANO_ENDPOINT_URL', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: profile.userId,
+            displayName: profile.displayName
+          })
+        }).then(response => response.json())
+          .then(data => {
+            alert('Data sent to Xano: ' + JSON.stringify(data));
+          })
+          .catch(err => {
+            console.error('Error sending data to Xano', err);
+          });
+      }).catch(err => {
+        console.error('Error getting profile', err);
+      });
+    });
+  </script>
+</body>
+</html>
